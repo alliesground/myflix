@@ -14,6 +14,10 @@ module Myflix
     config.generators do |g|
       g.orm :active_record
       g.template_engine :haml
+      g.helper_specs false
+      g.stylesheets = false
+      g.helper = false
+      g.javascripts = false
     end
   end
 end
