@@ -1,5 +1,9 @@
 require 'spec_helper'
 
 describe Video do
-  pending "add some examples to (or delete) #{__FILE__}"
+	it "saves itself" do
+		video = Video.new(title: 'futurama', description: "new series")
+		video.save
+		expect(Video.first).to eq video
+	end
 end
