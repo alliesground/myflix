@@ -9,6 +9,8 @@ gem 'sass-rails'
 gem 'uglifier'
 gem 'jquery-rails'
 gem 'pg'
+gem 'bootstrap_form'
+gem 'bcrypt'
 
 group :development do
   gem 'thin'
@@ -28,6 +30,7 @@ group :test do
   gem 'shoulda-matchers', '~> 2.8.0'
   gem 'capybara', '~> 2.4.4'
   gem 'launchy', '~> 2.4.3'
+  gem 'faker', '~> 1.4.3'
 end
 
 group :production do
