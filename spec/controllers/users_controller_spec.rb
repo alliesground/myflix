@@ -8,6 +8,16 @@ describe UsersController do
 					post :create, user: attributes_for(:user)
 				}.to change(User, :count).by(1)
 			end
+
+			it "saves the email attribute in lower case" do
+				post :create, user: attributes_for(:user, email: 'USER@Email.Com')
+				expect(assigns(:user).email).to eq 'user@email.com'
+			end
+
+			it "redirects to login page" do
+				post :create, user: attributes_for(:user)
+				expect(response).to redirect_to login_path
+			end
 		end
 		context "with invalid attributes" do
 			it "does not save a new user" do

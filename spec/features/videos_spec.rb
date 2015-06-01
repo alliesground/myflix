@@ -1,6 +1,10 @@
 require 'spec_helper'
 
 feature "Video" do
+	background{
+		@user = create(:user)
+		valid_sign_in @user
+	}
 	feature "search" do
 		background{
 			@futurama = create(:video)

@@ -8,6 +8,7 @@
 
 Video.destroy_all
 Category.destroy_all
+User.destroy_all
 
 tv_commedy = Category.create!(name: 'tv commedies')
 tv_drama = Category.create!(name: 'tv dramas')
@@ -41,6 +42,11 @@ Video.create!([
 	},
 ])
 
+User.create!(email: 'user@example.com', password: 'wildhorses', 
+	full_name: 'example user')
+
 puts "#{Video.count} videos created"
 puts "#{Category.count} categories created"
+puts "#{User.count} user created"
+
 
