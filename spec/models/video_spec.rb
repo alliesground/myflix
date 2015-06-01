@@ -1,45 +1,45 @@
 require 'spec_helper'
 
 describe Video do
-	it "saves itself" do
-		video = build(:video)
-		video.save
-		expect(Video.first).to eq video
-	end
+  it "saves itself" do
+    video = build(:video)
+    video.save
+    expect(Video.first).to eq video
+  end
 
-	it {should belong_to :category}
-	it {should validate_presence_of :title}
-	it {should validate_presence_of :description}
+  it {should belong_to :category}
+  it {should validate_presence_of :title}
+  it {should validate_presence_of :description}
 
-	describe '#search_by_title' do
-		before :each do
-			@wonder_year = create(:video, title: "wonder years")
-			@wonder_park = create(:video, title: "wonder park")
-		end
-		context "with no match" do
-			it "returns empty array" do
-				expect(Video.search_by_title('idol')).to match_array([])
-			end
-		end
+  describe '#search_by_title' do
+    before :each do
+      @wonder_year = create(:video, title: "wonder years")
+      @wonder_park = create(:video, title: "wonder park")
+    end
+    context "with no match" do
+      it "returns empty array" do
+        expect(Video.search_by_title('idol')).to match_array([])
+      end
+    end
 
-		context "with single match" do
-			it "returns array of single database object" do
-				expect(Video.search_by_title("wonder years")).to match_array([@wonder_year])
-			end
-		end
+    context "with single match" do
+      it "returns array of single database object" do
+        expect(Video.search_by_title("wonder years")).to match_array([@wonder_year])
+      end
+    end
 
-		context "with multiple match" do
-			it "returns array of multiple database objects" do
-				expect(Video.search_by_title("wonder")).to match_array([@wonder_year,
-					@wonder_park])
-			end
-		end
+    context "with multiple match" do
+      it "returns array of multiple database objects" do
+        expect(Video.search_by_title("wonder")).to match_array([@wonder_year,
+          @wonder_park])
+      end
+    end
 
-		context "with empty string as an argument" do
-			it "returns an empty array" do
-				expect(Video.search_by_title("")).to match_array([])
-			end
-		end
-	end
+    context "with empty string as an argument" do
+      it "returns an empty array" do
+        expect(Video.search_by_title("")).to match_array([])
+      end
+    end
+  end
 
 end

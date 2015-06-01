@@ -1,10 +1,10 @@
 class Video < ActiveRecord::Base
-	belongs_to :category
+  belongs_to :category
 
-	validates_presence_of :title, :description
+  validates_presence_of :title, :description
 
-	def self.search_by_title (search_term)
-		return [] if search_term.blank?
-		where("title ILIKE ?", "%#{search_term}%")
-	end
+  def self.search_by_title (search_term)
+    return [] if search_term.blank?
+    where("title ILIKE ?", "%#{search_term}%")
+  end
 end

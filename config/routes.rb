@@ -3,9 +3,9 @@ Myflix::Application.routes.draw do
   root to: 'static_pages#front'
   get 'home', to: 'videos#index'
   resources :videos, only: :show do
-  	collection do
-  		get 'search'
-  	end
+    collection do
+      get 'search'
+    end
   end
   get 'categories/:id', to: 'categories#show', as: :category
 
