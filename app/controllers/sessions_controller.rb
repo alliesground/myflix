@@ -2,13 +2,13 @@ class SessionsController < ApplicationController
 	before_action only: :new do
 		if logged_in?
 			flash[:warning] = "First sign out the current user"
-			redirect_to root_path 
+			redirect_to root_path
 		end
 	end
 
 	def create
-		user = User.find_by(email: params[:session][:email])
-		if user && user.authenticate(params[:session][:password])
+		user = User.find_by(email: params[:email])
+		if user && user.authenticate(params[:password])
 			log_in user
 			flash[:success] = "Logged in successfully"
 			redirect_to home_path

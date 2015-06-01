@@ -6,9 +6,6 @@
 #   cities = City.create([{ name: 'Chicago' }, { name: 'Copenhagen' }])
 #   Mayor.create(name: 'Emanuel', city: cities.first)
 
-Video.destroy_all
-Category.destroy_all
-User.destroy_all
 
 tv_commedy = Category.create!(name: 'tv commedies')
 tv_drama = Category.create!(name: 'tv dramas')
