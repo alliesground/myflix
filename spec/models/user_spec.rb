@@ -7,4 +7,5 @@ describe User do
   it { should validate_length_of(:email).is_at_most(255) }
   it { should allow_value('ben@example.com').for(:email) }
   it { should_not allow_value('ben.com').for(:email) }
+  it { should have_many :reviews }
 end

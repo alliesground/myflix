@@ -8,6 +8,8 @@ describe Video do
   end
 
   it {should belong_to :category}
+  it {should have_many :reviews}
+
   it {should validate_presence_of :title}
   it {should validate_presence_of :description}
 
@@ -39,6 +41,15 @@ describe Video do
       it "returns an empty array" do
         expect(Video.search_by_title("")).to match_array([])
       end
+    end
+  end
+
+  describe '#avg_rating' do
+    it "returns average rating for a video" do
+      video = create(:video)
+      review_1 = create(:review, rating: 5, video: video)
+      review_2 = create(:review, rating: 3, video: video)
+      expect(video.avg_rating).to eq 4.0
     end
   end
 

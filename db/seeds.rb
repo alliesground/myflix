@@ -39,8 +39,18 @@ Video.create!([
   },
 ])
 
-User.create!(email: 'user@example.com', password: 'wildhorses', 
+user = User.create!(email: 'user@example.com', password: 'wildhorses', 
   full_name: 'example user')
+video = Video.create!(title: 'monk',
+                      description: "beautiful movie",
+                      small_cover_url: '/tmp/monk.jpg',
+                      large_cover_url: '/tmp/monk_large.jpg',
+                      category: tv_drama)
+
+Review.create!(rating: 3, body:"great series", 
+              user: user, video: video)
+Review.create!(rating: 5, body:"great movie", 
+              user: user, video: video)
 
 puts "#{Video.count} videos created"
 puts "#{Category.count} categories created"

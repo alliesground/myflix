@@ -14,9 +14,12 @@ describe VideosController do
         expect(assigns(:video)).to eq video
       end
 
-      it "does not find the requested video" do
-        get :show, id: 1
-        expect(assigns(:video)).to eq nil
+      it "sets @reviews" do
+        video = create(:video)
+        review_1 = create(:review, video: video)
+        review_2 = create(:review, video: video)
+        get :show, id: video.id
+        expect(assigns(:reviews)).to eq [review_2, review_1]
       end
     end
 

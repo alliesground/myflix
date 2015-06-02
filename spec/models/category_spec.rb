@@ -10,7 +10,7 @@ describe Category do
 
   it "contains many videos" do
     cat_commedy = create(:category)
-    futurama = create(:video, category: cat_commedy)
+    futurama = create(:video, title: "futurama", category: cat_commedy)
     south_park = create(:video, title: "south_park", category: cat_commedy)
 
     expect(cat_commedy.videos).to eq([futurama, south_park])
