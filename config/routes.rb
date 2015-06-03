@@ -6,6 +6,7 @@ Myflix::Application.routes.draw do
     collection do
       get 'search'
     end
+    resources :reviews, only: :create
   end
   get 'categories/:id', to: 'categories#show', as: :category
 

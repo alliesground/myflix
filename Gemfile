@@ -23,6 +23,7 @@ group :development, :test do
   gem 'pry-nav'
   gem 'rspec-rails', '2.99'
   gem 'factory_girl_rails', '~> 4.5.0'
+  gem 'byebug', '~> 5.0.0'
 end
 
 group :test do
