@@ -37,4 +37,21 @@ describe QueueItem do
       expect(queue_item.rating).to eq nil
     end
   end
+
+  describe '.duplicate?' do
+    it "returns true if a video already exists in the queue for signed in user" do
+      user = create(:user)
+      video = create(:video)
+      queue_item = create(:queue_item, video: video, user: user)
+      expect(QueueItem.contains_video?(video, user)).to be_truthy
+    end
+
+    it "returns nil if video does not exist in the queue for signed in user" do
+      user1 = create(:user)
+      user2 = create(:user)
+      video = create(:video)
+      queue_item = create(:queue_item, video: video, user: user1)
+      expect(QueueItem.contains_video?(video, user2)).to be nil
+    end
+  end
 end

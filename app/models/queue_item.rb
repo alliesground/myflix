@@ -5,6 +5,11 @@ class QueueItem < ActiveRecord::Base
   delegate :title, to: :video, prefix: :video
   delegate :category, to: :video
 
+  def self.contains_video?(video, user)
+    queue_item = QueueItem.where(video: video, user: user).first
+    return true if queue_item
+  end
+
   def video_title
     video.title
   end
