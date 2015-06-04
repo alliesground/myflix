@@ -49,8 +49,6 @@ video = Video.create!(title: 'monk',
 
 Review.create!(rating: 3, body:"great series", 
               user: user, video: video)
-Review.create!(rating: 5, body:"great movie", 
-              user: user, video: video)
 
 puts "#{Video.count} videos created"
 puts "#{Category.count} categories created"

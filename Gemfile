@@ -24,6 +24,8 @@ group :development, :test do
   gem 'rspec-rails', '2.99'
   gem 'factory_girl_rails', '~> 4.5.0'
   gem 'byebug', '~> 5.0.0'
+  gem 'spring'
+  gem 'spring-commands-rspec'
 end
 
 group :test do
