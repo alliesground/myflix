@@ -15,6 +15,17 @@ class QueueItemsController < ApplicationController
     end
   end
 
+  def destroy
+    queue_item = QueueItem.find(params[:id])
+    if queue_item.user == current_user
+      queue_item.destroy
+      redirect_to my_queue_path
+    else
+      flash[:warning] = "You cannot delete other users queue item"
+      redirect_to my_queue_path
+    end
+  end
+
   private
 
   def queue_video(video)
