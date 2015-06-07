@@ -18,6 +18,7 @@ Myflix::Application.routes.draw do
   delete 'logout', to: 'sessions#destroy'
 
   get 'my_queue', to: 'queue_items#index'
+  patch 'queue_items', to: 'queue_items#update'
   resources :queue_items, only: [:create, :destroy]
   
 end

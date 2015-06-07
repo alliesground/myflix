@@ -85,12 +85,109 @@ describe QueueItemsController do
         delete :destroy, id: queue_item.id
         expect(QueueItem.find_by(id: queue_item.id)).to_not be nil
       end
+
+      it "normalizes the position of the remaining queue items" do
+        queue_item1 = create(:queue_item, user: current_user, position: 1)
+        queue_item2 = create(:queue_item, user: current_user, position: 2)
+        queue_item3 = create(:queue_item, user: current_user, position: 3)
+        delete :destroy, id: queue_item2.id
+        expect(current_user.queue_items.map(&:position)).to eq([1,2])
+      end
     end
 
     it "redirects to the root page for unauthenticated user" do
       queue_item = create(:queue_item)
       delete :destroy, id: queue_item.id
       expect(response).to redirect_to root_path
+    end
+  end
+
+  describe 'PATCH #update' do
+    context "with authenticated user" do
+      let(:current_user) { create(:user) }
+      before { session[:user_id] = current_user.id }
+
+      it "redirects to my_queue page" do
+        queue_item1 = create(:queue_item)
+        queue_item2 = create(:queue_item)
+        patch :update, items:[
+          {id: queue_item1.id}, 
+          {id: queue_item2.id}
+        ]
+        expect(response).to redirect_to my_queue_path
+      end
+
+      it "reorders queue items" do
+        queue_item1 = create(:queue_item, position: 1, user: current_user)
+        queue_item2 = create(:queue_item, position: 2, user: current_user)
+        patch :update, items:[
+          {id: queue_item1.id, position: 2}, 
+          {id: queue_item2.id, position: 1}
+        ]
+        expect(current_user.queue_items). to eq([queue_item2, queue_item1])
+      end
+
+      it "normalizes the position number" do
+        queue_item1 = create(:queue_item, position: 1, user: current_user)
+        queue_item2 = create(:queue_item, position: 2, user: current_user)
+        queue_item3 = create(:queue_item, position: 3, user: current_user)
+        patch :update, items:[
+          {id: queue_item1.id, position: 3}, 
+          {id: queue_item2.id, position: 2},
+          {id: queue_item3.id, position: 3}
+        ]
+        expect(current_user.queue_items.map(&:position)).to eq([1,2,3])
+      end
+
+      context "with invalid inputs" do
+        it "does not update any of the queue_item positions" do
+          queue_item1 = create(:queue_item, position: 1, user: current_user)
+          queue_item2 = create(:queue_item, position: 2, user: current_user)
+          patch :update, items:[
+            {id: queue_item1.id, position: 2},
+            {id: queue_item2.id, position: 2.3}
+          ]
+          queue_item1.reload
+          expect(queue_item1.position).to eq 1
+        end
+
+        it "redirect to my_queue path" do
+          queue_item1 = create(:queue_item, position: 1, user: current_user)
+          queue_item2 = create(:queue_item, position: 2, user: current_user)
+          patch :update, items:[
+            {id: queue_item1.id, position: 2},
+            {id: queue_item2.id, position: 2.3}
+          ]
+          expect(response).to redirect_to my_queue_path
+        end
+      end
+    end
+
+    context "with unauthenticated users" do
+      it "redirect to root path" do
+        queue_item1 = create(:queue_item, position: 1)
+        queue_item2 = create(:queue_item, position: 2)
+        patch :update, items:[
+          {id: queue_item1.id, position: 2},
+          {id: queue_item2.id, position: 1}
+        ]
+        expect(response).to redirect_to root_path
+      end
+    end
+
+    context "when current_user tries to updates others queue items" do
+      it "redirect to my_queue page without updating the queue item" do
+        current_user = create(:user)
+        session[:user_id] = current_user.id
+        other_user = create(:user)
+        queue_item1 = create(:queue_item, position: 1, user: other_user)
+        queue_item2 = create(:queue_item, position: 2, user: other_user)
+        patch :update, items:[
+          {id: queue_item1.id, position: 2},
+          {id: queue_item2.id, position: 1}
+        ]
+        expect(queue_item1.reload.position).to eq(1)
+      end
     end
   end
 end

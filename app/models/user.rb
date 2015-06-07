@@ -1,7 +1,7 @@
 class User < ActiveRecord::Base
   before_save { self.email = email.downcase }
   has_many :reviews
-  has_many :queue_items
+  has_many :queue_items, -> { order("position") }
   
   VALID_EMAIL_REGEX = /\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}\b/i
   validates_presence_of :full_name
