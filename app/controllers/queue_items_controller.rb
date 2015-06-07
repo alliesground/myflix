@@ -19,7 +19,7 @@ class QueueItemsController < ApplicationController
     queue_item = QueueItem.find(params[:id])
     if queue_item.user == current_user
       queue_item.destroy
-      normalize_queue
+      current_user.normalize_queue_item_position
       redirect_to my_queue_path
     else
       flash[:warning] = "You cannot delete other users queue item"
@@ -29,15 +29,8 @@ class QueueItemsController < ApplicationController
 
   def update
     begin
-      ActiveRecord::Base.transaction do
-        params[:items].each do |queue_item|
-          item = QueueItem.find(queue_item["id"])
-          if item.user == current_user
-            item.update!(position: queue_item["position"])
-          end
-        end
-      end
-      normalize_queue
+      update_queue
+      current_user.normalize_queue_item_position
     rescue Exception => e
       flash[:danger] = e.message
     end
@@ -53,9 +46,14 @@ class QueueItemsController < ApplicationController
       position: current_user.queue_items.count + 1)
   end
 
-  def normalize_queue
-    current_user.queue_items.each_with_index do |queue_item, index|
-      queue_item.update(position: index+1)
+  def update_queue
+    ActiveRecord::Base.transaction do
+      params[:items].each do |queue_item|
+        item = QueueItem.find(queue_item["id"])
+        if item.user == current_user
+          item.update!(position: queue_item["position"])
+        end
+      end
     end
   end
 

@@ -16,4 +16,10 @@ class User < ActiveRecord::Base
     cost = ActiveModel::SecurePassword.min_cost ? BCrypt::Engine::MIN_COST : BCrypt::Engine.cost
     BCrypt::Password.create(string, cost: cost)
   end
+
+  def normalize_queue_item_position
+    queue_items.each_with_index do |queue_item, index|
+      queue_item.update(position: index+1)
+    end
+  end
 end
