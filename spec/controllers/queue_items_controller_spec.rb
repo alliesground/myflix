@@ -3,8 +3,7 @@ require 'spec_helper'
 describe QueueItemsController do
   describe 'GET #index' do
     context "with authenticated user" do
-      let(:current_user) { create(:user) }
-      before { session[:user_id] = current_user.id }
+      login_user
 
       it "sets @queue_items to the queue items associated with the logged in user" do
         queue_item1 = create(:queue_item, user: current_user)
@@ -15,17 +14,15 @@ describe QueueItemsController do
     end
 
     context "with unauthenticated user" do
-      it "redirects to root path" do
-        get :index
-        expect(response).to redirect_to root_path
+      it_behaves_like 'require sign in' do
+        let(:action) { get :index }
       end
     end
   end
 
   describe 'POST #create' do
     context "with authenticated user" do
-      let(:current_user) { create(:user) }
-      before { session[:user_id] = current_user.id }
+      login_user
 
       it "saves the queue item assocaited with the video" do
         video = create(:video)
@@ -55,16 +52,16 @@ describe QueueItemsController do
       end
     end
 
-    it "redirects to root path for unauthenticated user" do
-      post :create
-      expect(response).to redirect_to root_path
+    context "with unauthenticated user" do
+      it_behaves_like 'require sign in' do
+        let(:action) { post :create }
+      end
     end
   end
 
   describe 'DELETE #destroy' do
     context "with authenticated user" do
-      let(:current_user) { create(:user) }
-      before { session[:user_id] = current_user.id }
+      login_user
 
       it "deletes the queue item for the signed in user" do
         queue_item = create(:queue_item, user: current_user)
@@ -95,17 +92,17 @@ describe QueueItemsController do
       end
     end
 
-    it "redirects to the root page for unauthenticated user" do
-      queue_item = create(:queue_item)
-      delete :destroy, id: queue_item.id
-      expect(response).to redirect_to root_path
+    context "with unauthenticated user" do
+      let(:queue_item) { create(:queue_item) }
+      it_behaves_like 'require sign in' do
+        let(:action) { delete :destroy, id: queue_item.id }
+      end
     end
   end
 
   describe 'PATCH #update' do
     context "with authenticated user" do
-      let(:current_user) { create(:user) }
-      before { session[:user_id] = current_user.id }
+      login_user
 
       context "with valid input" do
         let(:queue_item1) { create(:queue_item, position: 1, user: current_user) }
@@ -206,14 +203,15 @@ describe QueueItemsController do
     end
 
     context "with unauthenticated users" do
-      it "redirect to root path" do
-        queue_item1 = create(:queue_item, position: 1)
-        queue_item2 = create(:queue_item, position: 2)
-        patch :update, items:[
-          {id: queue_item1.id, position: 2},
-          {id: queue_item2.id, position: 1}
-        ]
-        expect(response).to redirect_to root_path
+      let(:queue_item1) { create(:queue_item, position: 1) }
+      let(:queue_item2) { create(:queue_item, position: 2) }
+      it_behaves_like 'require sign in' do
+        let(:action) do 
+          patch :update, items:[
+            {id: queue_item1.id, position: 2},
+            {id: queue_item2.id, position: 1}
+          ]
+        end
       end
     end
   end

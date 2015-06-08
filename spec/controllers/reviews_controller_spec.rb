@@ -2,14 +2,13 @@ require 'spec_helper'
 
 describe ReviewsController do
   describe 'POST #create' do
-    let(:video) { create(:video) }
     context "with authenticated user" do
-      let(:current_user) {  create(:user) }
-      before{ session[:user_id] = current_user.id }
+      login_user
+      let(:video) { create(:video) }
 
       context "with valid input" do
         before :each do
-          post :create, review: attributes_for(:review), video_id: video.id          
+          post :create, review: attributes_for(:review), video_id: video.id
         end
 
         it "saves the review" do
@@ -53,10 +52,12 @@ describe ReviewsController do
     end
 
     context "with unauthenticated user" do
-      it "redirects to the root path" do
-        post :create, review: attributes_for(:review, user: nil ), video_id: video.id
-        expect(response).to redirect_to root_path
-      end 
+      let(:video) { create(:video) }
+      it_behaves_like 'require sign in' do
+        let(:action) do
+          post :create, review: attributes_for(:review, user: nil ), video_id: video.id
+        end
+      end
     end
   end
 end

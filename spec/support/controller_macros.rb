@@ -1,8 +1,8 @@
 module ControllerMacros
-  def login_user
+  def login_user(user=nil)
+    let(:current_user) { (user || create(:user)) }
     before :each do
-      user = create(:user)
-      session[:user_id] = user.id
+      session[:user_id] = current_user.id
     end
   end
 end

@@ -3,10 +3,7 @@ require 'spec_helper'
 describe VideosController do
   describe 'GET #show' do
     context "with authenticated user" do
-      before :each do
-        @user = create(:user)
-        session[:user_id] = @user.id
-      end
+      login_user
 
       it "finds the requested video" do
         video = create(:video)
@@ -23,10 +20,13 @@ describe VideosController do
       end
     end
 
-    it "redirects to the home page for unauthenticated user" do
-      video = create(:video)
-      get :show, id: video.id
-      expect(response).to redirect_to root_path
+    context "with unauthenticated user" do
+      it_behaves_like 'require sign in' do
+        let(:action) do
+          video = create(:video)
+          get :show, id: video.id
+        end
+      end
     end
   end
 
@@ -39,9 +39,10 @@ describe VideosController do
       expect(assigns(:search_result)).to match_array([futurama])
     end
 
-    it "redirects to home page for unauthenticated user" do
-      get :search, search: "futu"
-      expect(response).to redirect_to root_path
+    context "with unauthenticated user" do
+      it_behaves_like 'require sign in' do
+        let(:action) { get :search, search: "futu" }
+      end
     end
   end
 end

@@ -26,15 +26,17 @@ describe UsersController do
         expect(response).to redirect_to login_path
       end
     end
+
     context "with invalid attributes" do
+      before :each do
+        post :create, user: attributes_for(:invalid_user)  
+      end
+
       it "does not save a new user" do
-        expect{
-          post :create, user: attributes_for(:invalid_user)
-        }.to_not change(User, :count)
+        expect(User.count).to eq 0
       end
 
       it "renders the :new template" do
-        post :create, user: attributes_for(:invalid_user)
         expect(response).to render_template :new
       end
     end
