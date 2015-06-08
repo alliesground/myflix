@@ -51,7 +51,8 @@ class QueueItemsController < ApplicationController
       params[:items].each do |queue_item|
         item = QueueItem.find(queue_item["id"])
         if item.user == current_user
-          item.update!(position: queue_item["position"])
+          item.update!(position: queue_item["position"].to_i,
+            rating: queue_item["rating"])
         end
       end
     end

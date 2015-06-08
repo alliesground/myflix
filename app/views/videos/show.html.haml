@@ -19,7 +19,7 @@
           .form-group
             .row
               .col-sm-3
-                = f.select(:rating, [['5 Stars', 5], ['4 Stars', 4], ['3 Stars', 3], ['2 Stars', 2], ['1 Star', 1]], label: "Rate this video")
+                = f.select(:rating, options_for_video_rating, label: "Rate this video")
           .form-group
             .row
               .col-sm-8

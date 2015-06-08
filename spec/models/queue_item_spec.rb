@@ -39,6 +39,47 @@ describe QueueItem do
     end
   end
 
+  describe '#rating=' do
+    it "updates the rating of the review if the review is present" do
+      video = create(:video)
+      user = create(:user)
+      review = create(:review, video: video, user: user, rating: 1)
+      queue_item = create(:queue_item, video: video, user: user)
+      queue_item.rating = 2
+      expect(review.reload.rating).to eq 2
+    end
+
+    it "creates a new review if the review is not present" do
+      video = create(:video)
+      user = create(:user)
+      queue_item = create(:queue_item, video: video, user: user)
+      expect {
+        queue_item.rating = 2
+      }.to change(Review, :count).by(1)
+    end
+
+    it "clears the rating of the review if the review is present" do
+      video = create(:video)
+      user = create(:user)
+      review = create(:review, video: video, user: user, rating: 2)
+      queue_item = create(:queue_item, video: video, user: user)
+      queue_item.rating = nil
+      expect(Review.first.rating).to be_nil
+    end
+
+    context "when review is present with empty rating" do
+      it "updates the rating" do
+        video = create(:video)
+        user = create(:user)
+        review = build(:review, video: video, user: user, rating: nil)
+        review.save(validate: false)
+        queue_item = create(:queue_item, video: video, user: user)
+        queue_item.rating = 1
+        expect(review.reload.rating).to eq 1
+      end
+    end
+  end
+
   describe '.duplicate?' do
     it "returns true if a video already exists in the queue for signed in user" do
       user = create(:user)
