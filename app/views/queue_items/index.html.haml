@@ -19,15 +19,15 @@
                 %tr
                   %td
                     = hidden_field_tag "items[][id]", queue_item.id
-                    = f.text_field "items[][position]", hide_label: true, value: queue_item.position
+                    = f.text_field "items[][position]", hide_label: true, id:"video#{queue_item.video.id}_position", value: queue_item.position
                   %td
                     = link_to queue_item.video_title, queue_item.video
                   %td
                     = button_to "Play", nil, class: "btn btn-default"
                   %td
-                    = select_tag "items[][rating]", options_for_video_rating(queue_item.rating), {include_blank: true, hide_label: true, class: "form-control"}
+                    = select_tag "items[][rating]", options_for_video_rating(queue_item.rating), {include_blank: true, hide_label: true, id:"item#{queue_item.id}_rating", class: "form-control"}
                   %td
                     = link_to queue_item.category_name, queue_item.video.category
                   %td
                     = link_to "delete", queue_item_path(queue_item), method: :delete
-          = f.submit "Update Insatant Queue", class: "btn btn-default"
+          = f.submit "Update Instant Queue", class: "btn btn-default"

@@ -1,14 +1,13 @@
 require 'spec_helper'
 
-feature "Video" do
-  background{
-    @user = create(:user)
-    valid_sign_in @user
-  }
-  feature "search" do
+feature "Video search" do
+  context "with authenticated user" do
+    let(:user) { create(:user) }
+    let(:futurama) { create(:video) }
     background{
-      @futurama = create(:video)
+      valid_sign_in user
     }
+
     scenario "lists searched videos" do
       visit home_path
       fill_in 'search', with: 'futurama'
