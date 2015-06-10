@@ -11,31 +11,41 @@ feature "Queue management" do
 
     scenario "adds a video to the queue" do
       add_video_to_queue(@futurama)
-      expect(QueueItem.first.video).to eq @futurama
-      expect(current_path).to eq my_queue_path
-      expect(page).to have_content @futurama.title
+      expect_queue_to_have_video(@futurama)
     end
 
     scenario "updates position of the video in the queue" do
-      add_video_to_queue(@futurama)
-      add_video_to_queue(@south_park)
-      visit my_queue_path
-      fill_in "video#{@futurama.id}_position", with: 2
-      fill_in "video#{@south_park.id}_position", with: 1
-      click_button 'Update Instant Queue'
+      add_video_to_queue(@futurama, @south_park)
 
-      expect(current_path).to eq my_queue_path
+      update_video_position(@futurama => 2, @south_park => 1)
+
       expect_video_position(@futurama, 2)
     end
 
-    def add_video_to_queue(video)
-      visit home_path
-      find("a[data-video-id='#{video.id}']").click
-      click_link '+ My Queue'
+    def add_video_to_queue(*videos)
+      videos.each do |video|
+        visit home_path
+        find("a[data-video-id='#{video.id}']").click
+        click_link '+ My Queue'
+      end
+    end
+
+    def expect_queue_to_have_video(video)
+      expect(QueueItem.first.video).to eq video
+      expect(page).to have_content video.title
+    end
+
+    def update_video_position(options={})
+      visit my_queue_path
+      options.map do |key, val|
+        fill_in "video#{key.id}_position", with: val
+      end
+      click_button 'Update Instant Queue'
     end
 
     def expect_video_position(video, position)
       expect(find("#video#{video.id}_position").value).to eq(position.to_s)
     end
+    
   end
 end
