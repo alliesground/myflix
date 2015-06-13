@@ -41,4 +41,21 @@ describe UsersController do
       end
     end
   end
+
+  describe 'GET #show' do
+    it_behaves_like 'require sign in' do
+      let(:user) { create(:user) }
+      let(:action) { get :show, id: user.id }
+    end
+
+    context "with authenticated user" do
+      login_user
+      
+      it "sets @user with the instance of the requested user" do
+        james = create(:user, email: "james@example.com")
+        get :show, id: james.id
+        expect(assigns(:user)).to be_instance_of User
+      end
+    end
+  end
 end

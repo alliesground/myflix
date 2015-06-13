@@ -20,6 +20,11 @@ class QueueItem < ActiveRecord::Base
     category.name
   end
 
+  def video_category
+    category
+  end
+
+
   def rating
     review = Review.where(user_id: user.id, video_id: video.id).first
     review.rating if review

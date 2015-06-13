@@ -22,6 +22,15 @@ describe QueueItem do
     end
   end
 
+  describe '#video_category' do
+    it "returns the category instance of the associated video in a queue item" do
+      category = create(:category, name: 'drama')
+      video = create(:video, category: category)
+      queue_item = create(:queue_item, video: video)
+      expect(queue_item.video_category).to be_an_instance_of Category
+    end
+  end
+
   describe '#rating' do
     it "returns the rating on the video if the user has reviewed it" do
       user = create(:user)

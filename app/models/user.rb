@@ -22,4 +22,8 @@ class User < ActiveRecord::Base
       queue_item.update(position: index+1)
     end
   end
+
+  def reviews_count
+    "Review".pluralize(reviews.count) + "\s(#{reviews.count})"
+  end
 end
