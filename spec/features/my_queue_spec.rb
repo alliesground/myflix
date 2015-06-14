@@ -24,8 +24,7 @@ feature "Queue management" do
 
     def add_video_to_queue(*videos)
       videos.each do |video|
-        visit home_path
-        find("a[data-video-id='#{video.id}']").click
+        click_video_on_home_page(video)
         click_link '+ My Queue'
       end
     end
