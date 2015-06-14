@@ -4,7 +4,8 @@
       %article
         %header
           %h2 #{@user.full_name}'s video collections (#{@user.queue_items.count})
-          %button.btn.btn-default Follow
+          = render 'follow_link', user: @user
+          
         %table.table
           %thead
             %tr

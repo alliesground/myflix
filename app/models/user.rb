@@ -2,6 +2,10 @@ class User < ActiveRecord::Base
   before_save { self.email = email.downcase }
   has_many :reviews
   has_many :queue_items, -> { order("position") }
+  has_many :relationships, foreign_key: "follower_id"
+  has_many :followed_users, through: :relationships, source: :followed_user
+  has_many :inverse_relationships, class_name: 'Relationship', foreign_key: "followed_id"
+  has_many :followers, through: :inverse_relationships, source: :follower
   
   VALID_EMAIL_REGEX = /\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}\b/i
   validates_presence_of :full_name
@@ -25,5 +29,9 @@ class User < ActiveRecord::Base
 
   def reviews_count
     "Review".pluralize(reviews.count) + "\s(#{reviews.count})"
+  end
+
+  def following?(other_user)
+    followed_users.include?(other_user)
   end
 end

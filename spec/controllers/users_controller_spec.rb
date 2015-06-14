@@ -50,7 +50,7 @@ describe UsersController do
 
     context "with authenticated user" do
       login_user
-      
+
       it "sets @user with the instance of the requested user" do
         james = create(:user, email: "james@example.com")
         get :show, id: james.id
