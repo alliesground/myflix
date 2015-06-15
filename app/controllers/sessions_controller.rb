@@ -1,5 +1,5 @@
 class SessionsController < ApplicationController
-  before_action only: :new do
+  before_action only: [:new, :create] do
     if logged_in?
       flash[:warning] = "First sign out the current user"
       redirect_to root_path

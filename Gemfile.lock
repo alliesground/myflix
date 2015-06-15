@@ -61,7 +61,7 @@ GEM
     debug_inspector (0.0.2)
     diff-lcs (1.2.5)
     erubis (2.7.0)
-    eventmachine (1.0.0)
+    eventmachine (1.0.7)
     execjs (2.0.2)
     factory_girl (4.5.0)
       activesupport (>= 3.0.0)
@@ -85,6 +85,8 @@ GEM
     json (1.8.1)
     launchy (2.4.3)
       addressable (~> 2.3)
+    letter_opener (1.4.1)
+      launchy (~> 2.2)
     mail (2.5.4)
       mime-types (~> 1.16)
       treetop (~> 1.4.8)
@@ -199,6 +201,7 @@ DEPENDENCIES
   haml-rails
   jquery-rails
   launchy (~> 2.4.3)
+  letter_opener
   pg
   pry
   pry-nav
