@@ -35,6 +35,7 @@ group :test do
   gem 'capybara', '~> 2.4.4'
   gem 'launchy', '~> 2.4.3'
   gem 'faker', '~> 1.4.3'
+  gem 'capybara-email'
 end
 
 group :production do
