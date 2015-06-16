@@ -3,7 +3,7 @@ class QueueItem < ActiveRecord::Base
   belongs_to :video
 
   delegate :title, to: :video, prefix: :video
-  delegate :category, to: :video
+  delegate :category, to: :video, prefix: :video
 
   validates_numericality_of :position, {only_integer: true}
 
@@ -17,11 +17,11 @@ class QueueItem < ActiveRecord::Base
   end
 
   def category_name
-    category.name
+    video.category.name
   end
 
   def video_category
-    category
+    video.category
   end
 
 

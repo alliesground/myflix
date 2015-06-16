@@ -27,7 +27,7 @@ describe User do
       it "returns the pluralized count of the reviews associated with a user" do
         user = create(:user)
         review1 = create(:review, user: user)
-        review1 = create(:review, user: user)
+        review2 = create(:review, user: user)
         expect(user.reviews_count). to eq "Reviews (2)"
       end
     end
