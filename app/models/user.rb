@@ -16,6 +16,8 @@ class User < ActiveRecord::Base
 
   has_secure_password validations: false
 
+  before_create :generate_token
+
   def self.digest(string)
     cost = ActiveModel::SecurePassword.min_cost ? BCrypt::Engine::MIN_COST : BCrypt::Engine.cost
     BCrypt::Password.create(string, cost: cost)
@@ -33,5 +35,9 @@ class User < ActiveRecord::Base
 
   def following?(other_user)
     followed_users.include?(other_user)
+  end
+
+  def generate_token
+    self.token = SecureRandom.urlsafe_base64
   end
 end

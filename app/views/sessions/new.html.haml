@@ -11,5 +11,8 @@
           .row
             .col-sm-4
               = f.password_field :password
+          .row
+            .col-sm-4
+              = link_to "Forgot password", forgot_password_path
         %fieldset.form-group.action
           = f.submit "Sign in"

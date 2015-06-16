@@ -9,6 +9,11 @@ describe User do
   it { should_not allow_value('ben.com').for(:email) }
   it { should have_many :reviews }
 
+  it "generates random token when user is created" do
+    user = create(:user)
+    expect(user.token).to be_present
+  end
+
   describe '#reviews_count' do
     context "with 1 review" do
       it "returns the singularized count of the review associated with a user" do

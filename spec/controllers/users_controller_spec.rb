@@ -25,6 +25,28 @@ describe UsersController do
         post :create, user: attributes_for(:user)
         expect(response).to redirect_to login_path
       end
+
+      context "when sending email" do
+        before { ActionMailer::Base.deliveries.clear }
+
+        context "with valid inputs" do
+          before { post :create, user: attributes_for(:user, email: 'jack@example.com') }
+
+          it "sends email to the registered user with valid inputs" do
+            expect(ActionMailer::Base.deliveries).to_not be_empty
+          end
+
+          it "sends to the right user with valid inputs" do
+            message = ActionMailer::Base.deliveries.last
+            expect(message.to).to eq ['jack@example.com']
+          end
+        end
+
+        it "does not send email with invalid inputs" do
+          post :create, user: attributes_for(:invalid_user)
+          expect(ActionMailer::Base.deliveries).to be_empty
+        end
+      end
     end
 
     context "with invalid attributes" do
