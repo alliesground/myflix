@@ -31,5 +31,8 @@ Myflix::Application.routes.draw do
   patch 'update_password', to: 'forgot_passwords#update'
   get 'expired_token', to: 'forgot_passwords#invalid_token'
   resources :forgot_passwords, only: [:create]
+
+  get 'invite', to: 'invitations#new'
+  resources :invitations, only: [:create]
   
 end

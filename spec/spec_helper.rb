@@ -21,6 +21,9 @@ ActiveRecord::Migration.maintain_test_schema!
 
 RSpec.configure do |config|
   config.extend ControllerMacros, :type => :controller
+
+  # clears deliveries array for email
+  config.before { ActionMailer::Base.deliveries.clear }
   
   # ## Mock Framework
   #

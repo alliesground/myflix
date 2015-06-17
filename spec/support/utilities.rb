@@ -9,3 +9,16 @@ def click_video_on_home_page(video)
   visit home_path
   find("a[data-video-id='#{video.id}']").click
 end
+
+def sign_out
+  visit home_path
+  within('div#user_links') do
+    find("a[href='/logout']").click
+  end
+end
+
+def expect_to_follow(other_user)
+  within('table') do
+    expect(page).to have_selector("a[href='/users/#{other_user.id}']")
+  end
+end

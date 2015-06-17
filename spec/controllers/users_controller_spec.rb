@@ -6,10 +6,38 @@ describe UsersController do
       get :new
       expect(assigns(:user)).to be_instance_of(User)
     end
+
+    context "when the registering user is an invited user" do
+      let(:inviter) { create(:user) }
+      it "initializes @user with an email of the invitee" do
+        get :new, email: 'james@example.com'
+        expect(assigns(:user).email).to eq 'james@example.com'
+      end
+
+      it "sets @inviter_id with the id of the inviter" do
+        get :new, email: 'james@example.com', inviter_id: inviter.id
+        expect(assigns(:inviter_id).to_i).to eq inviter.id
+      end
+    end
   end
 
   describe 'POST #create' do
     context "with valid attributes" do
+      context "when the registering user is an invited user" do
+        let(:inviter) { create(:user, email: 'alice@example.com') }
+        before :each do 
+          post :create, user: attributes_for(:user), inviter_id: inviter.id
+        end
+
+        it "saves the user" do
+          expect(User.count).to eq 2
+        end
+
+        it "creates a relationship between the inviter and invitee" do
+          expect(Relationship.count).to eq 1
+        end
+      end
+
       it "saves the new user" do
         expect{
           post :create, user: attributes_for(:user)

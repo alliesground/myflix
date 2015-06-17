@@ -29,12 +29,6 @@ feature 'Social Networking' do
       find("a[href='/relationships?followed_id=#{other_user.id}']").click
     end
 
-    def expect_to_follow(other_user)
-      within('table') do
-        expect(page).to have_selector("a[href='/users/#{other_user.id}']")
-      end
-    end
-
     def unfollow_user
       visit people_path
       within('table') do

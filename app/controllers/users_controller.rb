@@ -8,15 +8,26 @@ class UsersController < ApplicationController
   end
   
   def new
-    @user = User.new
+    if invited_user?
+      @inviter_id = params[:inviter_id]
+      @user = User.new(email: params[:email])
+    else
+      @user = User.new
+    end
   end
 
   def create
     @user = User.new(user_params)
 
     if @user.save
-      redirect_to login_path, success: "Congratulation! you have successfully created an account"
+      if invited_user?
+        @user.relationships.create(followed_id: params[:inviter_id].to_i)
+      end
+      
+      flash[:success] = "Congratulation! you have successfully created an account"
+      
       UserMailer.welcome_registered_user(@user).deliver
+      redirect_to login_path
     else
       render :new
     end
@@ -30,6 +41,10 @@ private
   
   def user_params
     params.require(:user).permit(:email, :password, :full_name)
+  end
+
+  def invited_user?
+    params[:email].present? || params[:inviter_id].present?
   end
 
 end

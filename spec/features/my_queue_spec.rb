@@ -2,7 +2,7 @@ require 'spec_helper'
 
 feature "Queue management" do
   context "with authenticated user" do
-    let(:user) { create(:user) }
+    given(:user) { create(:user) }
     background do
       valid_sign_in(user)
       @futurama = create(:video, title: 'futurama')
