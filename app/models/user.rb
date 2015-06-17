@@ -37,6 +37,10 @@ class User < ActiveRecord::Base
     followed_users.include?(other_user)
   end
 
+  def follow(other_user)
+    relationships.create(followed_id: other_user.id)
+  end
+
   def generate_token
     self.token = SecureRandom.urlsafe_base64
   end

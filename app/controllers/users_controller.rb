@@ -1,6 +1,6 @@
 class UsersController < ApplicationController
   before_action :authenticate, only: [:show]
-  before_action only: [:new, :create] do
+  before_action only: [:new, :create, :new_with_invitation_token] do
     if logged_in?
       flash[:warning] = "First sign out the current user"
       redirect_to root_path
@@ -8,11 +8,15 @@ class UsersController < ApplicationController
   end
   
   def new
-    if invited_user?
-      @inviter_id = params[:inviter_id]
-      @user = User.new(email: params[:email])
+    @user = User.new
+  end
+
+  def new_with_invitation_token
+    if @invitation = Invitation.find_by(token: params[:token])
+      @user = User.new(email: @invitation.recipient_email)
+      render :new
     else
-      @user = User.new
+      redirect_to expired_token_path
     end
   end
 
@@ -20,10 +24,7 @@ class UsersController < ApplicationController
     @user = User.new(user_params)
 
     if @user.save
-      if invited_user?
-        @user.relationships.create(followed_id: params[:inviter_id].to_i)
-      end
-      
+      handle_invitation
       flash[:success] = "Congratulation! you have successfully created an account"
       
       UserMailer.welcome_registered_user(@user).deliver
@@ -43,8 +44,12 @@ private
     params.require(:user).permit(:email, :password, :full_name)
   end
 
-  def invited_user?
-    params[:email].present? || params[:inviter_id].present?
+  def handle_invitation
+    if params[:invitation_token].present?
+      invitation = Invitation.find_by(token: params[:invitation_token])
+      @user.follow(invitation.inviter)
+      invitation.update_column(:token, nil)
+    end
   end
 
 end

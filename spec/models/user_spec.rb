@@ -39,4 +39,13 @@ describe User do
       end
     end
   end
+
+  describe '#follow' do
+    it 'follows another user' do
+      alice = create(:user)
+      bob = create(:user)
+      alice.follow(bob)
+      expect(alice.following?(bob)).to be_truthy
+    end
+  end
 end

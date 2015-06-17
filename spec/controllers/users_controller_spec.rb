@@ -6,35 +6,40 @@ describe UsersController do
       get :new
       expect(assigns(:user)).to be_instance_of(User)
     end
+  end
 
-    context "when the registering user is an invited user" do
-      let(:inviter) { create(:user) }
-      it "initializes @user with an email of the invitee" do
-        get :new, email: 'james@example.com'
-        expect(assigns(:user).email).to eq 'james@example.com'
-      end
+  describe 'GET #new_with_invitation_token' do
+    it "sets @user with recipient's email" do
+      invitation = create(:invitation)
+      get :new_with_invitation_token, token: invitation.token
+      expect(assigns(:user).email).to eq invitation.recipient_email
+    end
 
-      it "sets @inviter_id with the id of the inviter" do
-        get :new, email: 'james@example.com', inviter_id: inviter.id
-        expect(assigns(:inviter_id).to_i).to eq inviter.id
-      end
+    it "redirects to expired token page for invalid token" do
+      get :new_with_invitation_token, token: "123qwe"
+      expect(response).to redirect_to expired_token_path
     end
   end
 
   describe 'POST #create' do
     context "with valid attributes" do
       context "when the registering user is an invited user" do
-        let(:inviter) { create(:user, email: 'alice@example.com') }
+        let(:alice) { create(:user) }
+        let(:invitation) { create(:invitation, inviter: alice, recipient_email: 'john@example.com') }
         before :each do 
-          post :create, user: attributes_for(:user), inviter_id: inviter.id
+          post :create, user: attributes_for(:user, email: 'john@example.com'), invitation_token: invitation.token
         end
 
         it "saves the user" do
           expect(User.count).to eq 2
         end
 
-        it "creates a relationship between the inviter and invitee" do
+        it "creates a relationship between the inviter and recipient" do
           expect(Relationship.count).to eq 1
+        end
+
+        it "expires the invitation after acceptance" do
+          expect(Invitation.first.reload.token).to be_nil
         end
       end
 

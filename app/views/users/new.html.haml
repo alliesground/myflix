@@ -6,7 +6,7 @@
         %header
           %h1 Register
         %fieldset
-          = hidden_field_tag :inviter_id, @inviter_id if @inviter_id
+          = hidden_field_tag :invitation_token, @invitation.token if @invitation
           
           = f.email_field :email, label: "Email Address"
           = f.password_field :password
