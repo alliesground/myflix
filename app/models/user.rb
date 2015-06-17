@@ -1,4 +1,6 @@
 class User < ActiveRecord::Base
+  include Tokenable
+
   before_save { self.email = email.downcase }
   has_many :reviews
   has_many :queue_items, -> { order("position") }
@@ -15,8 +17,6 @@ class User < ActiveRecord::Base
                     uniqueness: { case_sensitive: false }
 
   has_secure_password validations: false
-
-  before_create :generate_token
 
   def self.digest(string)
     cost = ActiveModel::SecurePassword.min_cost ? BCrypt::Engine::MIN_COST : BCrypt::Engine.cost
@@ -39,9 +39,5 @@ class User < ActiveRecord::Base
 
   def follow(other_user)
     relationships.create(followed_id: other_user.id)
-  end
-
-  def generate_token
-    self.token = SecureRandom.urlsafe_base64
   end
 end

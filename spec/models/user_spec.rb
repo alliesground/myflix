@@ -9,9 +9,8 @@ describe User do
   it { should_not allow_value('ben.com').for(:email) }
   it { should have_many :reviews }
 
-  it "generates random token when user is created" do
-    user = create(:user)
-    expect(user.token).to be_present
+  it_behaves_like 'tokenable' do
+    let(:object) { create(:user) }
   end
 
   describe '#reviews_count' do

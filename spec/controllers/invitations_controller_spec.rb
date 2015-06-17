@@ -12,6 +12,7 @@ describe InvitationsController do
   describe 'POST #create' do
     context "with authenticated user" do
       login_user
+
       context "with valid input" do
         before :each do
           post :create, invitation: {recipient_name:'james', recipient_email:'james@example.com', message:'please join myflix'}
