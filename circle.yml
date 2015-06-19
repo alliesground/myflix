@@ -1,0 +1,19 @@
+machine:
+  ruby:
+    version: 2.1.6
+deployment:
+  production:
+    branch: master
+    commands:
+      - heroku maintenance:on --app lit-earth-1464
+      - heroku pg:backups capture --app lit-earth-1464
+      - git push git@heroku.com:lit-earth-1464.git $CIRCLE_SHA1:refs/heads/master
+      - heroku run rake db:migrate --app lit-earth-1464
+      - heroku maintenance:off --app lit-earth-1464
+  staging:
+    branch: staging
+    commands:
+      - heroku maintenance:on --app shrouded-dawn-7496
+      - git push git@heroku.com:shrouded-dawn-7496.git $CIRCLE_SHA1:refs/heads/master
+      - heroku run rake db:migrate --app shrouded-dawn-7496
+      - heroku maintenance:off --app shrouded-dawn-7496
