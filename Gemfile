@@ -14,6 +14,8 @@ gem 'bcrypt'
 gem 'figaro'
 gem 'sidekiq'
 gem 'unicorn'
+gem 'carrierwave'
+gem "mini_magick"
 
 group :development do
   gem 'thin'
