@@ -1,0 +1,34 @@
+%section.admin_add_video
+  .container
+    .row
+      .col-md-10.col-md-offset-1
+        = bootstrap_form_for [:admin, @video], html: { class: "form-horizontal"} do |f|
+          %ul.nav.nav-tabs
+            %li
+              %a(href="") Recent Payments
+            %li.active
+              %a(href="") Add a New Video
+          %br
+          %fieldset
+            .row
+              .col-sm-6.col-sm-offset-3
+                = f.text_field :title
+            .row
+              .col-sm-6.col-sm-offset-3
+                = f.collection_select :category_id, Category.all, :id, :name
+            .row
+              .col-sm-6.col-sm-offset-3
+                = f.text_area :description, size: '1x8'
+            .row
+              .col-sm-6.col-sm-offset-3
+                = f.file_field :large_cover_url
+            .row
+              .col-sm-6.col-sm-offset-3
+                = f.file_field :small_cover_url
+            .row
+              .col-sm-6.col-sm-offset-3
+                = f.text_field :video_url, label: 'Video url'
+
+          %fieldset.actions.form-group
+            = f.submit "Add Video", class: "btn btn-default"
+
