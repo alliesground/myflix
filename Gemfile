@@ -16,6 +16,7 @@ gem 'sidekiq'
 gem 'unicorn'
 gem 'carrierwave'
 gem "mini_magick"
+gem 'stripe'
 
 group :development do
   gem 'thin'
