@@ -55,10 +55,6 @@ describe Admin::VideosController do
         it "saves a video associated with a category" do
           expect(Video.first.category.name).to eq 'commedy'
         end
-
-        it "uploaded pictures into amazon s3" do
-          
-        end
       end
 
       context "with invalid attributes" do

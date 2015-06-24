@@ -31,13 +31,13 @@ class UsersController < ApplicationController
       )
 
       if charge.success?
-        flash[:success] = "Congrats people"
+        flash[:success] = "Congrats"
         @user.save
         handle_invitation
         UserMailer.welcome_registered_user(@user).deliver
         redirect_to login_path
       else
-        flash[:danger] = charge.error_message
+        flash.now[:danger] = charge.error_message
         render :new
       end
     else
