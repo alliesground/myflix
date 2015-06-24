@@ -8,6 +8,7 @@ class User < ActiveRecord::Base
   has_many :followed_users, through: :relationships, source: :followed_user
   has_many :inverse_relationships, class_name: 'Relationship', foreign_key: "followed_id"
   has_many :followers, through: :inverse_relationships, source: :follower
+  has_many :invitations
   
   VALID_EMAIL_REGEX = /\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}\b/i
   validates_presence_of :full_name

@@ -7,7 +7,7 @@ feature 'Friend invitation' do
     valid_sign_in(user)
   end
 
-  scenario "invites a friend for registration through email" do
+  scenario "invites a friend for registration through email", js: true do
     send_invitation_to(invited_user)
 
     expect_invitation_sent_to(invited_user[:email])
@@ -16,19 +16,11 @@ feature 'Friend invitation' do
 
     register_invited_user
 
-    sign_in_invited_user(invited_user)
+    sign_out
+
+    valid_sign_in(User.last)
 
     expect(page).to have_content "Welcome, Invited User"
-  end
-
-  scenario "invited friend follows the inviter" do
-    send_invitation_to(invited_user)
-
-    follow_email_link_to_register(invited_user[:email])
-
-    register_invited_user
-
-    sign_in_invited_user(invited_user)
 
     visit people_path
 
@@ -49,21 +41,18 @@ feature 'Friend invitation' do
   end
 
   def follow_email_link_to_register(email)
-    open_email(email)
+    #open_email(email)
     current_email.click_link 'Register'
   end
 
   def register_invited_user
-    fill_in 'Password', with: 'password'
+    fill_in 'Password', with: 'wildhorses'
     fill_in 'Full Name', with: 'Invited User'
+    find("input[data-stripe='number']").set('4242424242424242')
+    find("input[data-stripe='cvc']").set('123')
+    select 'June', from: 'date_month'
+    select '2016', from: 'date_year'
     click_button 'Sign Up'
-  end
-
-  def sign_in_invited_user(invited_user)
-    sign_out
-    visit login_path
-    fill_in 'Email Address', with: invited_user[:email]
-    fill_in 'Password', with: 'password'
-    click_button 'Sign in'
+    #binding.pry
   end
 end

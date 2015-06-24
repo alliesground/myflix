@@ -2,7 +2,7 @@
   .container
     .row
       .col-md-10.col-md-offset-1
-        = bootstrap_form_for [:admin, @video], html: { class: "form-horizontal"} do |f|
+        = bootstrap_form_for [:admin, @video], layout: :horizontal, label_col: "col-sm-2", control_col: "col-sm-10" do |f|
           %ul.nav.nav-tabs
             %li
               %a(href="") Recent Payments

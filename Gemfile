@@ -42,6 +42,7 @@ group :test do
   gem 'launchy', '~> 2.4.3'
   gem 'faker', '~> 1.4.3'
   gem 'capybara-email'
+  gem 'selenium-webdriver'
 end
 
 group :production do

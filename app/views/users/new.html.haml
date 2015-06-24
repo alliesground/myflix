@@ -1,7 +1,14 @@
+= content_for :head do
+  %script(type="text/javascript" src="https://js.stripe.com/v2/")
+  :javascript
+    Stripe.setPublishableKey("#{ENV['stripe_publishable_key']}");
+  = javascript_include_tag "payment"
+
 %section.register.container
   .row
     .col-sm-10.col-sm-offset-1
       = bootstrap_form_for @user, layout: :horizontal, label_col: "col-sm-2", control_col: "col-sm-10" do |f|
+        .payment-errors
         = f.alert_message "Please fix the errors below.", error_summary: false
         %header
           %h1 Register
@@ -11,5 +18,22 @@
           = f.email_field :email, label: "Email Address"
           = f.password_field :password
           = f.text_field :full_name, label: "Full Name"
+        %fieldset.credit_card
+          .form-group
+            = label_tag "", "Credit Card Number", class: "col-sm-2"
+            .col-sm-6
+              = text_field_tag nil, nil, class: "form-control", data:{stripe:"number"}
+          .form-group
+            = label_tag "", "Security Code", class: "col-sm-2"
+            .col-sm-6
+              = text_field_tag nil, nil, class: "form-control", data:{stripe:"cvc"}
+          .form-group
+            = label_tag "", "Expiration", class: "col-sm-2"
+            .col-sm-3
+              = select_month(Date.today, {add_month_numbers: false,}, class: 'form-control', data:{stripe:"exp-month"})
+            .col-sm-2
+              = select_year(Date.today.year, {start_year: Date.today.year, end_year: Date.today.year + 4}, class: 'form-control', data:{stripe:"exp-year"})
+          
+
           = f.form_group do
-            %script(src="https://checkout.stripe.com/checkout.js" class="stripe-button" data-key="#{ENV['stripe_publishable_key']}" data-amount="999" data-name="Sign up charge" data-description="9.99 to sign up for videos")
+            = f.submit "Sign Up", class: "btn btn-default"

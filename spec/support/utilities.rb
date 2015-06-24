@@ -11,9 +11,10 @@ def click_video_on_home_page(video)
 end
 
 def sign_out
-  visit home_path
+  visit login_path
   within('div#user_links') do
-    find("a[href='/logout']").click
+    find("a[id='dlabel']").click
+    click_link 'Sign Out'
   end
 end
 

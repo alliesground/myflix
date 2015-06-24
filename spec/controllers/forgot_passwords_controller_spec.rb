@@ -20,7 +20,7 @@ describe ForgotPasswordsController do
       it "sends email with a link to the password reset page" do
         post :create, email: jane.email
         message = ActionMailer::Base.deliveries.last
-        expect(message.body.encoded).to match("http://localhost/reset_password/#{jane.token}")
+        expect(message.body.encoded).to match(jane.token)
       end
     end
 

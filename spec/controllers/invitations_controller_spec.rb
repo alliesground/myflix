@@ -32,7 +32,7 @@ describe InvitationsController do
 
         it "sends email with a link to registration page" do
           message = ActionMailer::Base.deliveries.last
-          expect(message.body.encoded).to match("http://localhost/register")
+          expect(message.body).to have_link 'Register'
         end
       end
 
