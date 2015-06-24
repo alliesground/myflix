@@ -53,6 +53,6 @@ feature 'Friend invitation' do
     select 'June', from: 'date_month'
     select '2016', from: 'date_year'
     click_button 'Sign Up'
-    #binding.pry
+    sleep 8
   end
 end

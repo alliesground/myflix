@@ -37,7 +37,7 @@ class UsersController < ApplicationController
         UserMailer.welcome_registered_user(@user).deliver
         redirect_to login_path
       else
-        flash[:danger] = charge.error_message
+        flash.now[:danger] = charge.error_message
         render :new
       end
     else
