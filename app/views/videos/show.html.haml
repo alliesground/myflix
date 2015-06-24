@@ -6,7 +6,7 @@
       .video_info.col-sm-3
         %header
           %h3= @video.title
-          %span Rating: #{@video.avg_rating}/5.0
+          %span Rating: #{@video.rating?}
         %p= @video.description
         .actions
           = link_to '+ My Queue', queue_items_path(video_id: @video.id), method: :post, class: "btn btn-default"
