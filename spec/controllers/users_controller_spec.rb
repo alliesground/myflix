@@ -22,84 +22,34 @@ describe UsersController do
   end
 
   describe 'POST #create' do
-    context "with normal registration" do
-      context "with valid attributes" do
-        context "with successful charge" do
-          successful_stripe_charge
-          before { post :create, user: attributes_for(:user) }
+    context "with successful sign up" do
+      it "redirect to login page" do
+        response = double(:response, successful?: true)
+        UserSignup.any_instance.should_receive(:save_with_payment).and_return(response)
 
-          it_behaves_like "charged registered user"
-
-          it "creates the user" do
-            expect(User.count).to eq 1
-          end
-        end
-
-        context "with unsuccessful charge" do
-          unsuccessful_stripe_charge
-          before { post :create, user: attributes_for(:user) }
-
-          it_behaves_like "user with unsuccessful charge"
-
-          it "does not create a user" do
-            expect(User.count).to eq 0
-          end
-        end
+        post :create, user: attributes_for(:user)
+        expect(response).to redirect_to login_path
       end
     end
 
-    context "registration for invited user" do
-      let(:alice) { create(:user) }
-      let(:invitation) { create(:invitation, inviter: alice, recipient_email: 'john@example.com') }
+    context "with unsuccessful sign up" do
+      it "renders :new template" do
+        response = double(:response, successful?: false)
+        response.should_receive(:error_message)
+        UserSignup.any_instance.should_receive(:save_with_payment).and_return(response)
 
-      context "with valid attributes" do
-        context "with successful charge" do
-          successful_stripe_charge
-          before :each do
-            post :create, user: attributes_for(:user, email: 'john@example.com'), invitation_token: invitation.token
-          end
+        post :create, user: attributes_for(:user), stripeToken: '1234'
 
-          it_behaves_like "charged registered user"
-
-          it "creates the user" do
-            expect(User.count).to eq 2
-          end
-
-          it "creates a relationship between the inviter and recipient" do
-            expect(Relationship.count).to eq 1
-          end
-
-          it "expires the invitation after acceptance" do
-            expect(Invitation.first.reload.token).to be_nil
-          end
-        end
-
-        context "with unsuccessful charge" do
-          unsuccessful_stripe_charge
-          before :each do
-            post :create, user: attributes_for(:user, email: 'john@example.com'), invitation_token: invitation.token
-          end
-
-          it_behaves_like "user with unsuccessful charge"
-
-          it "does not create a user" do
-            expect(User.count).to eq 1
-          end
-        end
-      end
-    end
-
-    context "with invalid attributes" do
-      before :each do
-        post :create, user: attributes_for(:invalid_user)  
-      end
-
-      it "does not save a new user" do
-        expect(User.count).to eq 0
-      end
-
-      it "renders the :new template" do
         expect(response).to render_template :new
+      end
+
+      it "sets flash error message" do
+        response = double(:response, successful?: false, error_message: "This is an error message")
+        UserSignup.any_instance.should_receive(:save_with_payment).and_return(response)
+
+        post :create, user: attributes_for(:user), stripeToken: '123456'
+
+        expect(flash[:danger]).to be_present
       end
     end
   end
