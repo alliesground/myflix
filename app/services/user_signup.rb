@@ -31,6 +31,31 @@ class UserSignup
     end
   end
 
+  def save_with_subscription(stripe_token, invitation_token)
+    if @user.valid?
+      response = StripeWrapper::Customer.create(
+        source: stripe_token,
+        user: @user
+      )
+
+      if response.success?
+        @user.save
+        UserMailer.welcome_registered_user(@user).deliver
+        handle_invitation(invitation_token)
+        @status = :success
+        self
+      else
+        @status = :fail
+        @error_message = response.error_message
+        self
+      end
+    else
+      @status = :fail
+      @error_message = "Invalid user information"
+      self
+    end
+  end
+
   def successful?
     @status == :success
   end

@@ -25,16 +25,15 @@ class UsersController < ApplicationController
     stripe_token = params[:stripeToken]
     invitation_token = params[:invitation_token] ||= nil
 
-    response = UserSignup.new(@user).save_with_payment(stripe_token, invitation_token)
+    response = UserSignup.new(@user).save_with_subscription(stripe_token, invitation_token)
 
     if response.successful?
-      flash[:success] = "Thank you for signing up"
+      flash[:success] = "Thank you for subscribing"
       redirect_to login_path
     else
       flash[:danger] = response.error_message
       render :new
     end
-
   end
 
   def show

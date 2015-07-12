@@ -25,7 +25,7 @@ describe UsersController do
     context "with successful sign up" do
       it "redirect to login page" do
         response = double(:response, successful?: true)
-        UserSignup.any_instance.should_receive(:save_with_payment).and_return(response)
+        UserSignup.any_instance.should_receive(:save_with_subscription).and_return(response)
 
         post :create, user: attributes_for(:user)
         expect(response).to redirect_to login_path
@@ -36,7 +36,7 @@ describe UsersController do
       it "renders :new template" do
         response = double(:response, successful?: false)
         response.should_receive(:error_message)
-        UserSignup.any_instance.should_receive(:save_with_payment).and_return(response)
+        UserSignup.any_instance.should_receive(:save_with_subscription).and_return(response)
 
         post :create, user: attributes_for(:user), stripeToken: '1234'
 
@@ -45,7 +45,7 @@ describe UsersController do
 
       it "sets flash error message" do
         response = double(:response, successful?: false, error_message: "This is an error message")
-        UserSignup.any_instance.should_receive(:save_with_payment).and_return(response)
+        UserSignup.any_instance.should_receive(:save_with_subscription).and_return(response)
 
         post :create, user: attributes_for(:user), stripeToken: '123456'
 
