@@ -3,7 +3,7 @@ class VideoDecorator < Draper::Decorator
 
   def rating?
     if reviews.present?
-      "#{avg_rating} / 5.000"
+      "#{avg_rating} / 5.0"
     else
       "N/A"
     end
