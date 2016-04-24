@@ -11,7 +11,7 @@
         .payment-errors
         = f.alert_message "Please fix the errors below.", error_summary: false
         %header
-          %h1 Register
+          %h1 Register here
         %fieldset
           = hidden_field_tag :invitation_token, @invitation.token if @invitation
           
