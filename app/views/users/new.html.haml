@@ -2,7 +2,7 @@
   %script(type="text/javascript" src="https://js.stripe.com/v2/")
   :javascript
     Stripe.setPublishableKey("#{ENV['stripe_publishable_key']}");
-  = javascript_include_tag "payment"
+  = #javascript_include_tag "payment"
 
 %section.register.container
   .row
@@ -11,7 +11,7 @@
         .payment-errors
         = f.alert_message "Please fix the errors below.", error_summary: false
         %header
-          %h1 Register here
+          %h1 Register
         %fieldset
           = hidden_field_tag :invitation_token, @invitation.token if @invitation
           
