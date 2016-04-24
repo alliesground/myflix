@@ -24,9 +24,7 @@ var registration_payment = {
       var token = response.id;
       $form.append($('<input type="hidden" name="stripeToken" />').val(token));
       $form.get(0).submit();
-    }
-
-
+    } 
   }
 };
 
