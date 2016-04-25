@@ -24,30 +24,46 @@ describe UsersController do
   describe 'POST #create' do
     context "with successful sign up" do
       it "redirect to login page" do
-        response = double(:response, successful?: true)
-        UserSignup.any_instance.should_receive(:save_with_subscription).and_return(response)
+#        response = double(:response, successful?: true)
+#        UserSignup.any_instance.should_receive(:save_with_subscription).and_return(response)
 
         post :create, user: attributes_for(:user)
         expect(response).to redirect_to login_path
       end
+
+      it "sends sign up notification" do
+        post :create, user: attributes_for(:user)
+        expect(ActionMailer::Base.deliveries).to_not be_empty 
+      end
+
+      context "with invited user" do
+        let(:alice) { create(:user) }
+        let(:invitation) { create(:invitation, inviter: alice, recipient_email: 'john@example.com') }
+
+        it "handles invitation" do
+          post :create, user: attributes_for(:user), invitation_token: invitation.token
+          expect(assigns(:user).following?(alice)).to be_truthy
+        end
+      end
+
     end
 
     context "with unsuccessful sign up" do
+      before :each do
+        post :create, user: attributes_for(:user, email:'')
+      end
+
       it "renders :new template" do
-        response = double(:response, successful?: false)
-        response.should_receive(:error_message)
-        UserSignup.any_instance.should_receive(:save_with_subscription).and_return(response)
-
-        post :create, user: attributes_for(:user), stripeToken: '1234'
-
+#        response = double(:response, successful?: false)
+#        response.should_receive(:error_message)
+#        UserSignup.any_instance.should_receive(:save_with_subscription).and_return(response)
+# 
         expect(response).to render_template :new
       end
 
       it "sets flash error message" do
-        response = double(:response, successful?: false, error_message: "This is an error message")
-        UserSignup.any_instance.should_receive(:save_with_subscription).and_return(response)
-
-        post :create, user: attributes_for(:user), stripeToken: '123456'
+#        response = double(:response, successful?: false, error_message: "This is an error message")
+#        UserSignup.any_instance.should_receive(:save_with_subscription).and_return(response)
 
         expect(flash[:danger]).to be_present
       end
