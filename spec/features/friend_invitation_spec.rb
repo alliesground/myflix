@@ -48,10 +48,10 @@ feature 'Friend invitation' do
   def register_invited_user
     fill_in 'Password', with: 'wildhorses'
     fill_in 'Full Name', with: 'Invited User'
-    find("input[data-stripe='number']").set('4242424242424242')
-    find("input[data-stripe='cvc']").set('123')
-    select 'June', from: 'date_month'
-    select '2016', from: 'date_year'
+#    find("input[data-stripe='number']").set('4242424242424242')
+#    find("input[data-stripe='cvc']").set('123')
+#    select 'June', from: 'date_month'
+#    select '2016', from: 'date_year'
     click_button 'Sign Up'
     sleep 8
   end
