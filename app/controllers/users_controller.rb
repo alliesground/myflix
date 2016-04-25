@@ -22,18 +22,33 @@ class UsersController < ApplicationController
 
   def create
     @user = User.new(user_params)
-    stripe_token = params[:stripeToken]
     invitation_token = params[:invitation_token] ||= nil
+    
+    if @user.save
+      flash[:success] = "Thank you for signing up"
+      UserMailer.welcome_registered_user(@user).deliver
+      handle_invitation(@user, invitation_token) unless invitation_token.nil?
 
-    response = UserSignup.new(@user).save_with_subscription(stripe_token, invitation_token)
-
-    if response.successful?
-      flash[:success] = "Thank you for subscribing"
       redirect_to login_path
     else
-      flash[:danger] = response.error_message
+      flash[:danger] = "Invalid user information"
       render :new
     end
+
+
+
+#    stripe_token = params[:stripeToken]
+#    invitation_token = params[:invitation_token] ||= nil
+#
+#    response = UserSignup.new(@user).save_with_subscription(stripe_token, invitation_token)
+#
+#    if response.successful?
+#      flash[:success] = "Thank you for subscribing"
+#      redirect_to login_path
+#    else
+#      flash[:danger] = response.error_message
+#      render :new
+#    end
   end
 
   def show
@@ -44,6 +59,14 @@ private
   
   def user_params
     params.require(:user).permit(:email, :password, :full_name)
+  end
+
+  def handle_invitation(user, invitation_token)
+    if invitation_token.present?
+      invitation = Invitation.find_by(token: invitation_token)
+      user.follow(invitation.inviter)
+      invitation.update_column(:token, nil)
+    end
   end
 
 end
