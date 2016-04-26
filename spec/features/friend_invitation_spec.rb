@@ -1,5 +1,7 @@
 require 'spec_helper'
 
+=begin
+
 feature 'Friend invitation' do
   given(:user) { create(:user, full_name: 'Antonio') }
   given(:invited_user) { {:name => "invited_user", :email => "invited_user@example.com"} }
@@ -55,4 +57,6 @@ feature 'Friend invitation' do
     click_button 'Sign Up'
     sleep 8
   end
-end
+end 
+
+=end
