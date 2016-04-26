@@ -26,8 +26,8 @@ class UsersController < ApplicationController
     
     if @user.save
       flash[:success] = "Thank you for signing up"
-      UserMailer.welcome_registered_user(@user).deliver
-      handle_invitation(@user, invitation_token) unless invitation_token.nil?
+      #UserMailer.welcome_registered_user(@user).deliver
+      #handle_invitation(@user, invitation_token) unless invitation_token.nil?
 
       redirect_to login_path
     else
